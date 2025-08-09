@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div id="app-container">
+        <header class="main-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="header-left">
+                        <div class="header-logo">
+                            <span id="user-initials">LD</span>
+                        </div>
+                        <div class="header-title">
+                            <h1>Life Dashboard</h1>
+                            <p id="today-date">Wednesday, August 9, 2025</p>
+                        </div>
+                    </div>
+                    <div class="header-right">
+                        <button id="theme-toggle-btn" class="icon-btn" title="Toggle Theme">
+                            <i data-lucide="moon"></i>
+                        </button>
+                        <button id="settings-btn" class="icon-btn" title="Open Settings">
+                            <i data-lucide="settings"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <div class="greeting-card">
+                <div class="greeting-content">
+                    <div class="greeting-text">
+                        <h2 id="greeting-message">Good evening!</h2>
+                        <p>Ready to make today amazing? Let's track your progress! ✨</p>
+                    </div>
+                    <div id="user-name-prompt" class="greeting-action">
+                        </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <i data-lucide="target"></i>
+                        <h3>Daily Habits</h3>
+                    </div>
+                    <div class="card-content">
+                        <div id="add-habit-form-container">
+                            <button id="show-add-habit-btn" class="add-btn-dashed">
+                                <i data-lucide="plus"></i> Add New Habit
+                            </button>
+                            <form id="add-habit-form" class="add-form hidden">
+                                <input type="text" id="new-habit-input" placeholder="e.g., Drink 2L water" required>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                    <button type="button" id="cancel-add-habit-btn" class="btn btn-outline">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="habit-list" class="item-list">
+                            </div>
+                        <div id="habits-empty-state" class="empty-state hidden">
+                            <i data-lucide="target" class="empty-state-icon"></i>
+                            <p>No habits yet. Start building good habits today!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i data-lucide="flag"></i>
+                        <h3>Goals Tracker</h3>
+                    </div>
+                    <div class="card-content">
+                        <div id="add-goal-form-container">
+                             <button id="show-add-goal-btn" class="add-btn-dashed">
+                                <i data-lucide="plus"></i> Add New Goal
+                            </button>
+                            <form id="add-goal-form" class="add-form hidden">
+                                <input type="text" id="new-goal-name" placeholder="Enter goal name..." required>
+                                <div class="goal-inputs">
+                                    <input type="date" id="new-goal-deadline" title="Deadline (optional)">
+                                    <select id="new-goal-priority">
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="low">Low</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Add Goal</button>
+                                    <button type="button" id="cancel-add-goal-btn" class="btn btn-outline">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="goal-list" class="item-list">
+                            </div>
+                         <div id="goals-empty-state" class="empty-state hidden">
+                            <i data-lucide="flag" class="empty-state-icon"></i>
+                            <p>No goals yet. Set your first goal and start making progress!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i data-lucide="smile"></i>
+                        <h3>Mood Tracker</h3>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="sub-heading">How are you feeling today?</h4>
+                        <div id="mood-selection-area">
+                            </div>
+                        <div id="mood-recorded-area" class="hidden">
+                           </div>
+                        <div id="mood-stats-area" class="mood-stats hidden">
+                            </div>
+                        <button id="toggle-mood-chart-btn" class="btn btn-outline full-width hidden">
+                            <i data-lucide="trending-up"></i> Show Mood Trends
+                        </button>
+                        <div id="mood-chart-container" class="chart-container hidden">
+                            <canvas id="mood-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i data-lucide="heart" style="color: var(--destructive);"></i>
+                        <h3>Gratitude Journal</h3>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="sub-heading">Today's Gratitude</h4>
+                        <form id="gratitude-form">
+                            <textarea id="gratitude-input-1" placeholder="I'm grateful for... #1" rows="2"></textarea>
+                            <textarea id="gratitude-input-2" placeholder="I'm grateful for... #2" rows="2"></textarea>
+                            <textarea id="gratitude-input-3" placeholder="I'm grateful for... #3" rows="2"></textarea>
+                            <button type="submit" class="btn btn-primary full-width">
+                                <i data-lucide="heart"></i> Save Today's Gratitude
+                            </button>
+                        </form>
+                        <div class="past-entries-header">
+                            <h4 class="sub-heading">Past Entries</h4>
+                            <button id="view-all-gratitude-btn" class="btn btn-outline btn-sm">
+                                <i data-lucide="calendar"></i> View All
+                            </button>
+                        </div>
+                        <div id="gratitude-list" class="item-list scrollable">
+                           </div>
+                         <div id="gratitude-empty-state" class="empty-state hidden">
+                            <i data-lucide="heart" class="empty-state-icon"></i>
+                            <p>Start your gratitude journey today!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="main-footer">
+            <div class="container">
+                <p>Your personal life dashboard • All data stored locally in your browser</p>
+                <p>Stay consistent, stay amazing! 🌟</p>
+            </div>
+        </footer>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="settings"></i> Settings</h2>
+                <button id="close-settings-btn" class="icon-btn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>Profile</h4>
+                    <div class="form-group">
+                        <label for="settings-name-input">Display Name</label>
+                        <div class="input-group">
+                            <input type="text" id="settings-name-input" placeholder="Your Name">
+                            <button id="save-name-settings-btn" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4>Data & Privacy</h4>
+                    <p class="description">Export your data or clear it from this browser.</p>
+                    <div class="data-actions">
+                        <button id="export-data-btn" class="btn btn-outline"><i data-lucide="download"></i> Export Data</button>
+                        <button id="import-data-btn" class="btn btn-outline"><i data-lucide="upload"></i> Import Data</button>
+                        <input type="file" id="import-file-input" class="hidden" accept=".json">
+                    </div>
+                     <div class="danger-zone">
+                        <h5>Danger Zone</h5>
+                        <button id="clear-data-btn" class="btn btn-danger"><i data-lucide="trash-2"></i> Clear All Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>
